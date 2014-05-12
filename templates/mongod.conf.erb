@@ -9,34 +9,38 @@ logpath=<%= scope.lookupvar('mongodb::logdir') %>/mongod_<%= @mongod_instance %>
 
 logappend=<%= @mongod_logappend %>
 
+port=<%= @mongod_port %>
+
+<% if @mongod_rest != false -%>
 rest=<%= @mongod_rest %>
+<% end -%>
 
 fork=<%= @mongod_fork %>
 
 <% if @mongod_shardsvr != false -%>
 shardsvr=<%= @mongod_shardsvr %>
-<% end %>
+<% end -%>
 
 <% if @mongod_configsvr != false -%>
 configsvr=<%= @mongod_configsvr %>
-<% end %>
+<% end -%>
 
 <% if @mongod_bind_ip != "" -%>
 bind_ip=<%= @mongod_bind_ip %>
-<% end %>
-
-port=<%= @mongod_port %>
+<% end -%>
 
 <% if @mongod_replSet != "" -%>
 replSet=<%= @mongod_replSet %>
-<% end %>
+<% end -%>
+
 <% if @mongod_auth != false -%>
 auth=<%= @mongod_auth %>
-<% end %>
+<% end -%>
+
 <% if @mongod_useauth != false -%>
 keyFile = /etc/mongod_<%= @mongod_instance %>.key
 <% end -%>
 
-<% @mongod_add_options.each do |addoption| %>
-<%= addoption %>
+<% @mongod_add_options.each do |add_option| %>
+<%= add_option %>
 <% end %>

@@ -32,7 +32,7 @@
 #   Enable/Disable log file appending (default: true)
 #
 # [*mongod_rest*]
-#   Enable/Disable REST api (default: true)
+#   Enable/Disable REST api (default: false)
 #
 # [*mongod_fork*]
 #   Enable/Disable fork of mongod process (default: true)
@@ -68,7 +68,7 @@ define mongodb::mongod (
   $mongod_configsvr = false,
   $mongod_shardsvr = false,
   $mongod_logappend = true,
-  $mongod_rest = true,
+  $mongod_rest = false,
   $mongod_fork = true,
   $mongod_auth = false,
   $mongod_useauth = false,

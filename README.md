@@ -5,9 +5,9 @@ repos/packages/services/configuration files for mongodb. This module does not
 manage internal sharding and replica set configurations.
 
 ##Dependencies
-* puppetlabs-stdlib
-* puppetlabs-apt
+* puppetlabs-stdlib (`puppet module install puppetlabs-stdlib`)
+* puppetlabs-apt (`puppet module install puppetlabs-apt`)
 
 ##Code Examples
 
-Look in tests for example invocations.
+Look in `tests` directory for example invocations.

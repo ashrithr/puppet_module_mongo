@@ -7,58 +7,67 @@ node default {
   # Install mongodb packages
   class { 'mongodb':
     repo_manage => true,
-    package_ensure => '2.6.1'
+    package_ensure => '2.6.1-2'
   }
 }
 
 # Shard server 1 - in replica set named 'mongoShard1' listening on port 27017
-node 'node1' inherits default {
+node 'ip-10-229-13-85.us-west-1.compute.internal' inherits default {
   mongodb::mongod { 'mongo_shard1':
     mongod_instance => 'Shard1',
     mongod_replSet  => 'mongoShard1',
     mongod_shardsvr => true,
-    mongod_port     => 27017
+    mongod_port     => 27018
   }
 }
 
 # Shard server 2 - in replica set 'mongoShard1'
-node 'node2' inherits default {
+node 'ip-10-199-65-50.us-west-1.compute.internal' inherits default {
   mongodb::mongod { 'mongo_shard2':
     mongod_instance => 'Shard2',
     mongod_replSet  => 'mongoShard1',
     mongod_shardsvr => true,
-    mongod_port     => 27017
+    mongod_port     => 27018
   }
 }
 
 # Shard server 1 - in replica set 'mongoShard2'
-node 'node3' inherits default {
+node 'ip-10-199-71-238.us-west-1.compute.internal' inherits default {
   mongodb::mongod { 'mongo_shard1':
     mongod_instance => 'Shard1',
     mongod_replSet  => 'mongoShard2',
     mongod_shardsvr => true,
-    mongod_port     => 27017
+    mongod_port     => 27018
   }
 }
 
 # Shard server 2 - in replica set 'mongoShard2'
-node 'node4' inherits default {
+node 'ip-10-229-12-112.us-west-1.compute.internal' inherits default {
   mongodb::mongod { 'mongo_shard2':
     mongod_instance => 'Shard2',
     mongod_replSet  => 'mongoShard2',
     mongod_shardsvr => true,
-    mongod_port     => 27017
+    mongod_port     => 27018
   }
 }
 
 # Config server
 # arbiter node 1 - for replica set 'mongoShard1'
 # arbiter node 2 - for replica set 'mongoShard2'
-node 'node5' inherits default {
+# Router
+node 'ip-10-229-12-148.us-west-1.compute.internal' inherits default {
   mongodb::mongod { 'mongo_config1':
     mongod_instance  => 'mongoConfig1',
     mongod_configsvr => true,
-    mongod_port      => 27018
+    mongod_port      => 27019
+  }
+
+  ->
+
+  mongodb::mongos { 'mongos':
+    mongos_instance => 'mongoproxy',
+    mongos_port     => 27017,
+    mongos_configServers => 'ip-10-229-12-148.us-west-1.compute.internal:27018'
   }
 
   mongodb::mongod { 'mongo_arbiter1':
@@ -66,7 +75,7 @@ node 'node5' inherits default {
     mongod_replSet     => 'mongoShard1',
     mongod_shardsvr    => true,
     mongod_port        => 30000,
-    mongod_add_options => ['journal.enabled = false', 'smallFiles = true', 'preallocDataFiles = false']
+    mongod_add_options => ['nojournal = true', 'smallfiles = true', 'noprealloc = true']
   }
 
   mongodb::mongod { 'mongo_arbiter2':
@@ -74,15 +83,6 @@ node 'node5' inherits default {
     mongod_replSet     => 'mongoShard2',
     mongod_shardsvr    => true,
     mongod_port        => 30001,
-    mongod_add_options => ['journal.enabled = false', 'smallFiles = true', 'preallocDataFiles = false']
-  }
-}
-
-# Mongo Router
-node 'node6' inherits default {
-  mongodb::mongos { 'mongos':
-    mongos_instance => 'mongoproxy',
-    mongos_port     => 27017,
-    mongos_configServers => 'node1:'
+    mongod_add_options => ['nojournal = true', 'smallfiles = true', 'noprealloc = true']
   }
 }

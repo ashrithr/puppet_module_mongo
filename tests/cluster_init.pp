@@ -6,7 +6,8 @@
 node default {
   # Install mongodb packages
   class { 'mongodb':
-    repo_manage => true
+    repo_manage => true,
+    package_ensure => '2.6.1'
   }
 }
 

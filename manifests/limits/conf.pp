@@ -66,14 +66,14 @@ define mongodb::limits::conf (
     context => $context,
     onlyif  => "match ${path_exact} size != 1",
     changes => [
-                 # remove all matching to the $domain, $type, $item, for any $value
-                 "rm ${path_list}",
-                 # insert new node at the end of tree
-                 "set domain[last()+1] ${domain}",
-                 # assign values to the new node
-                 "set domain[last()]/type ${type}",
-                 "set domain[last()]/item ${item}",
-                 "set domain[last()]/value ${value}",
-               ],
+                # remove all matching to the $domain, $type, $item, for any $value
+                "rm ${path_list}",
+                # insert new node at the end of tree
+                "set domain[last()+1] ${domain}",
+                # assign values to the new node
+                "set domain[last()]/type ${type}",
+                "set domain[last()]/item ${item}",
+                "set domain[last()]/value ${value}",
+              ],
   }
 }

@@ -21,7 +21,7 @@ class mongodb::params {
 
   $run_as_user = 'mongod'
 
-  $run_as_group 'mongod'
+  $run_as_group = 'mongod'
 
   # directorypath to store db directory in
   # subdirectories for each mongo instance will be created

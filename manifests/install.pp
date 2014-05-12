@@ -25,7 +25,7 @@ class mongodb::install (
   if ($package_version == undef ) {
     $package_ensure = $::mongodb::package_ensure # default: installed
   } else {
-    $package_ensure = "$package_version"
+    $package_ensure = "${package_version}"
   }
 
   package { 'mongodb-org':

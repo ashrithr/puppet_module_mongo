@@ -11,53 +11,53 @@ node default {
   }
 }
 
-# Shard server 1 - in replica set named 'mongoShard1' listening on port 27017
-node 'ip-10-229-13-85.us-west-1.compute.internal' inherits default {
+# Shard server 1 - in replica set named 'rs1' listening on port 27018
+node 'ip-10-198-70-37.us-west-1.compute.internal' inherits default {
   mongodb::mongod { 'mongo_shard1':
     mongod_instance => 'Shard1',
-    mongod_replSet  => 'mongoShard1',
+    mongod_replSet  => 'rs1',
     mongod_shardsvr => true,
     mongod_port     => 27018
   }
 }
 
-# Shard server 2 - in replica set 'mongoShard1'
-node 'ip-10-199-65-50.us-west-1.compute.internal' inherits default {
+# Shard server 2 - in replica set 'rs1'
+node 'ip-10-226-6-5.us-west-1.compute.internal' inherits default {
   mongodb::mongod { 'mongo_shard2':
     mongod_instance => 'Shard2',
-    mongod_replSet  => 'mongoShard1',
+    mongod_replSet  => 'rs1',
     mongod_shardsvr => true,
     mongod_port     => 27018
   }
 }
 
-# Shard server 1 - in replica set 'mongoShard2'
-node 'ip-10-199-71-238.us-west-1.compute.internal' inherits default {
+# Shard server 1 - in replica set 'rs2'
+node 'ip-10-229-11-72.us-west-1.compute.internal' inherits default {
   mongodb::mongod { 'mongo_shard1':
     mongod_instance => 'Shard1',
-    mongod_replSet  => 'mongoShard2',
+    mongod_replSet  => 'rs2',
     mongod_shardsvr => true,
     mongod_port     => 27018
   }
 }
 
-# Shard server 2 - in replica set 'mongoShard2'
-node 'ip-10-229-12-112.us-west-1.compute.internal' inherits default {
+# Shard server 2 - in replica set 'rs2'
+node 'ip-10-198-66-161.us-west-1.compute.internal' inherits default {
   mongodb::mongod { 'mongo_shard2':
     mongod_instance => 'Shard2',
-    mongod_replSet  => 'mongoShard2',
+    mongod_replSet  => 'rs2',
     mongod_shardsvr => true,
     mongod_port     => 27018
   }
 }
 
 # Config server
-# arbiter node 1 - for replica set 'mongoShard1'
-# arbiter node 2 - for replica set 'mongoShard2'
+# arbiter node 1 - for replica set 'rs1'
+# arbiter node 2 - for replica set 'rs2'
 # Router
-node 'ip-10-229-12-148.us-west-1.compute.internal' inherits default {
+node 'ip-10-229-11-76.us-west-1.compute.internal' inherits default {
   mongodb::mongod { 'mongo_config1':
-    mongod_instance  => 'mongoConfig1',
+    mongod_instance  => 'Config1',
     mongod_configsvr => true,
     mongod_port      => 27019
   }
@@ -72,20 +72,20 @@ node 'ip-10-229-12-148.us-west-1.compute.internal' inherits default {
   mongodb::mongos { 'mongos':
     mongos_instance => 'mongoproxy',
     mongos_port     => 27017,
-    mongos_configServers => 'ip-10-229-12-148.us-west-1.compute.internal:27019'
+    mongos_configServers => 'ip-10-229-11-76.us-west-1.compute.internal:27019'
   }
 
   mongodb::mongod { 'mongo_arbiter1':
-    mongod_instance    => 'mongoArbiter1',
-    mongod_replSet     => 'mongoShard1',
+    mongod_instance    => 'Arbiter1',
+    mongod_replSet     => 'rs1',
     mongod_shardsvr    => true,
     mongod_port        => 30000,
     mongod_add_options => ['nojournal = true', 'smallfiles = true', 'noprealloc = true']
   }
 
   mongodb::mongod { 'mongo_arbiter2':
-    mongod_instance    => 'mongoArbiter2',
-    mongod_replSet     => 'mongoShard2',
+    mongod_instance    => 'Arbiter2',
+    mongod_replSet     => 'rs2',
     mongod_shardsvr    => true,
     mongod_port        => 30001,
     mongod_add_options => ['nojournal = true', 'smallfiles = true', 'noprealloc = true']
@@ -93,28 +93,28 @@ node 'ip-10-229-12-148.us-west-1.compute.internal' inherits default {
 }
 
 # Initialize replica set 1 (mongoShard1)
-# From replica set member (ip-10-229-13-85.us-west-1.compute.internal) connect to mongo
+# From replica set member (ip-10-198-70-37.us-west-1.compute.internal) connect to mongo
 # $mongo --port 27018
 # > config = {
-# >   _id : "mongoShard1",
+# >   _id : "rs1",
 # >   members : [
-# >     { _id : 0, host: "ip-10-229-13-85.us-west-1.compute.internal:27018" },
-# >     { _id : 1, host: "ip-10-199-65-50.us-west-1.compute.internal:27018" },
-# >     { _id : 2, host: "ip-10-229-12-148.us-west-1.compute.internal:30000", arbiterOnly : true },
+# >     { _id : 0, host: "ip-10-198-70-37.us-west-1.compute.internal:27018" },
+# >     { _id : 1, host: "ip-10-226-6-5.us-west-1.compute.internal:27018" },
+# >     { _id : 2, host: "ip-10-229-11-76.us-west-1.compute.internal:30000", arbiterOnly : true },
 # >   ]
 # > }
 # > rs.initiate(config)
 # > rs.status()
 
 # TODO: Initialize replica set 2 (mongoShard2)
-# From replica set member (ip-10-199-71-238.us-west-1.compute.internal) connect to mongo
+# From replica set member (ip-10-229-11-72.us-west-1.compute.internal) connect to mongo
 # $mongo --port 27018
 # > config = {
-# >   _id : "mongoShard2",
+# >   _id : "rs2",
 # >   members : [
-# >     { _id : 0, host: "ip-10-199-71-238.us-west-1.compute.internal:27018" },
-# >     { _id : 1, host: "ip-10-229-12-112.us-west-1.compute.internal:27018" },
-# >     { _id : 2, host: "ip-10-229-12-148.us-west-1.compute.internal:30001", arbiterOnly : true },
+# >     { _id : 0, host: "ip-10-229-11-72.us-west-1.compute.internal:27018" },
+# >     { _id : 1, host: "ip-10-198-66-161.us-west-1.compute.internal:27018" },
+# >     { _id : 2, host: "ip-10-229-11-76.us-west-1.compute.internal:30001", arbiterOnly : true },
 # >   ]
 # > }
 # > rs.initiate(config)
@@ -123,8 +123,8 @@ node 'ip-10-229-12-148.us-west-1.compute.internal' inherits default {
 # TODO: Add shards to the cluster
 # From mongos instance connect to mongo shell
 # $ mongo
-# > sh.addShard("mongoShard1/ip-10-229-13-85.us-west-1.compute.internal:27018")
-# > sh.addShard("mongoShard2/ip-10-199-71-238.us-west-1.compute.internal:27018")
+# > sh.addShard("mongoShard1/ip-10-198-70-37.us-west-1.compute.internal:27018")
+# > sh.addShard("mongoShard2/ip-10-229-11-72.us-west-1.compute.internal:27018")
 
 # Enable sharding for a database
 # From mongos instance connect to mongo shell

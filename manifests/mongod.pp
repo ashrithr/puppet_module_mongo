@@ -80,7 +80,7 @@ define mongodb::mongod (
         content => template('mongodb/mongod.conf.erb'),
         mode    => '0755',
         # no auto restart of a db because of a config change
-        #notify => Class['mongodb::service'],
+        notify  => Service["mongod_${mongod_instance}"],
         require => Class['mongodb::install'];
 
     "/etc/init.d/mongod_${mongod_instance}":

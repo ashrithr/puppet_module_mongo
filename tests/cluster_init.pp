@@ -123,8 +123,8 @@ node 'ip-10-229-11-76.us-west-1.compute.internal' inherits default {
 # TODO: Add shards to the cluster
 # From mongos instance connect to mongo shell
 # $ mongo
-# > sh.addShard("mongoShard1/ip-10-198-70-37.us-west-1.compute.internal:27018")
-# > sh.addShard("mongoShard2/ip-10-229-11-72.us-west-1.compute.internal:27018")
+# > sh.addShard("rs1/ip-10-198-70-37.us-west-1.compute.internal:27018")
+# > sh.addShard("rs2/ip-10-229-11-72.us-west-1.compute.internal:27018")
 
 # Enable sharding for a database
 # From mongos instance connect to mongo shell

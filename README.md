@@ -11,3 +11,10 @@ manage internal sharding and replica set configurations.
 ##Code Examples
 
 Look in `tests` directory for example invocations.
+
+Getting the repository to puppet server:
+
+```
+cd modules
+git clone https://github.com/ashrithr/puppet_module_mongo.git mongodb
+```

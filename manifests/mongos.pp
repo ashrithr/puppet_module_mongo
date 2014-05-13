@@ -60,7 +60,7 @@ define mongodb::mongos (
         content => template('mongodb/mongos.conf.erb'),
         mode    => '0755',
         # no auto restart of a db because of a config change
-        #notify => Class['mongodb::service'],
+        notify  => Service["mongos_${mongos_instance}"],
         require => Class['mongodb::install'];
     "/etc/init.d/mongos_${mongos_instance}":
         content => $::osfamily ? {

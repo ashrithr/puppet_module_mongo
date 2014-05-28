@@ -25,9 +25,6 @@
 # [*mongos_fork*]
 #   Enable/Disable fork of mongod process (default: true)
 #
-# [*mongos_auth*]
-#   Enable/Disable auth true/false (default: false)
-#
 # [*mongos_useauth*]
 #   Keyfile contents. Your random string/false (default: false)
 #
@@ -52,7 +49,6 @@ define mongodb::mongos (
   $mongos_running = true,
   $mongos_logappend = true,
   $mongos_fork = true,
-  $mongos_auth = false,
   $mongos_useauth = false,
   $mongos_add_options = []
 ) {

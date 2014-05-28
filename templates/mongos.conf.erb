@@ -17,10 +17,6 @@ port = <%= @mongos_port %>
 
 configdb = <%= @mongos_configServers %>
 
-<% if @mongos_auth != false -%>
-auth = <%= @mongos_auth %>
-<% end -%>
-
 <% if @mongos_useauth != false -%>
 keyFile = /etc/mongos_<%= @mongos_instance %>.key
 <% end -%>

@@ -52,6 +52,7 @@ define mongodb::mongos (
   $mongos_running = true,
   $mongos_logappend = true,
   $mongos_fork = true,
+  $mongos_auth = false,
   $mongos_useauth = false,
   $mongos_add_options = []
 ) {
